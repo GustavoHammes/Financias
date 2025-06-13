@@ -7,6 +7,7 @@ interface Parcela {
 }
 
 const EmprestimoForm = () => {
+  const [nomeUsuario, setNomeUsuario] = useState('');
   const [valor, setValor] = useState(0);
   const [parcelas, setParcelas] = useState(0);
   const [taxa, setTaxa] = useState(0);
@@ -14,16 +15,26 @@ const EmprestimoForm = () => {
   const [resultado, setResultado] = useState<Parcela[]>([]);
 
   const simular = async () => {
+    if (!nomeUsuario || valor <= 0 || parcelas <= 0 || taxa < 0) {
+      alert("Preencha o nome e os campos numéricos corretamente.");
+      return;
+    }
+
+    // Salva o usuário sempre que clicar em simular
+    localStorage.setItem('usuario', nomeUsuario);
+
     const res = await fetch('http://localhost:3000/api/simular-emprestimo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        nome_usuario: nomeUsuario,
         valor_total: valor,
         parcelas,
         taxa_juros: taxa,
         tipo_juros: tipo,
       }),
     });
+
     const data = await res.json();
     setResultado(data.parcelas);
   };
@@ -34,9 +45,15 @@ const EmprestimoForm = () => {
   return (
     <div>
       <h2>Simular Empréstimo</h2>
-      <input type="number" placeholder="Valor total" onChange={e => setValor(+e.target.value)} />
-      <input type="number" placeholder="Parcelas" onChange={e => setParcelas(+e.target.value)} />
-      <input type="number" placeholder="Taxa (%)" onChange={e => setTaxa(+e.target.value)} />
+      <input
+        type="text"
+        placeholder="Nome do usuário"
+        value={nomeUsuario}
+        onChange={e => setNomeUsuario(e.target.value)}
+      />
+      <input type="number" placeholder="Valor total" min={1} onChange={e => setValor(+e.target.value)} />
+      <input type="number" placeholder="Parcelas" min={1} onChange={e => setParcelas(+e.target.value)} />
+      <input type="number" placeholder="Taxa (%)" min={0} onChange={e => setTaxa(+e.target.value)} />
       <select onChange={e => setTipo(e.target.value as 'simples' | 'composto')}>
         <option value="simples">Juros Simples</option>
         <option value="composto">Juros Compostos</option>
@@ -54,7 +71,7 @@ const EmprestimoForm = () => {
               </tr>
             </thead>
             <tbody>
-              {resultado.map((p) => (
+              {resultado.map(p => (
                 <tr key={p.parcela}>
                   <td style={{ border: '1px solid black', padding: '8px' }}>{p.parcela}</td>
                   <td style={{ border: '1px solid black', padding: '8px' }}>{p.total.toFixed(2)}</td>

@@ -1,44 +1,63 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const Relatorio = () => {
-  const [dados, setDados] = useState<any[]>([]);
+const RelatorioInvestimento = () => {
+  const baixarRelatorioInvestimento = async () => {
+    const usuario = localStorage.getItem('usuario');
 
-  const carregar = async () => {
-    const res = await fetch('http://localhost:3000/api/relatorio-investimentos');
-    const data = await res.json();
-    setDados(data);
+    if (!usuario) {
+      alert('Nenhum usuário encontrado. Faça uma simulação primeiro.');
+      return;
+    }
+
+    const response = await fetch(`http://localhost:3000/api/baixar-relatorio-investimentos?usuario=${usuario}`);
+    if (!response.ok) {
+      alert('Erro ao baixar relatório de investimentos.');
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'relatorio_investimentos.txt';
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const baixarRelatorioEmprestimo = async () => {
+    const usuario = localStorage.getItem('usuario');
+
+    if (!usuario) {
+      alert('Nenhum usuário encontrado. Faça uma simulação primeiro.');
+      return;
+    }
+
+    const response = await fetch(`http://localhost:3000/api/baixar-relatorio-emprestimo?usuario=${usuario}`);
+    if (!response.ok) {
+      alert('Erro ao baixar relatório de empréstimo.');
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'relatorio_emprestimo.txt';
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
   };
 
   return (
     <div>
-      <h2>Relatório de Investimentos</h2>
-      <button onClick={carregar}>Carregar Relatório</button>
-      {dados.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>Usuário</th>
-              <th>Investimento</th>
-              <th>Valor</th>
-              <th>Meses</th>
-              <th>Rendimento</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dados.map((d, i) => (
-              <tr key={i}>
-                <td>{d.usuario}</td>
-                <td>{d.investimento}</td>
-                <td>R$ {d.valor_investido}</td>
-                <td>{d.meses}</td>
-                <td>R$ {d.rendimento_final}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      <h2>Relatórios</h2>
+      <button onClick={baixarRelatorioInvestimento}>Baixar Relatório de Investimentos</button>
+      <button onClick={baixarRelatorioEmprestimo} style={{ marginLeft: '1rem' }}>
+        Baixar Relatório de Empréstimo
+      </button>
     </div>
   );
 };
 
-export default Relatorio;
+export default RelatorioInvestimento;

@@ -2,7 +2,7 @@ import React from 'react';
 import EmprestimoForm from './components/EmprestimoForm';
 import InvestimentoForm from './components/InvestimentoForm';
 import Relatorio from './components/Relatorio';
-import ImagemUpload from './components/ImagemUpload';
+
 
 function App() {
   return (
@@ -13,8 +13,7 @@ function App() {
       <InvestimentoForm />
       <hr />
       <Relatorio />
-      <hr />
-      <ImagemUpload />
+      
     </div>
   );
 }
