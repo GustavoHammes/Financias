@@ -42,17 +42,26 @@ router.post("/investimento", async (req: Request, res: Response) => {
     res.json(result.rows[0]);
 });
 
-// Simular pagamento de empréstimo mês a mês
+// Simular pagamento de empréstimo mês a mês (com valor total e juros por parcela)
 router.post("/simular-emprestimo", async (req: Request, res: Response) => {
     const { valor_total, parcelas, tipo_juros, taxa_juros } = req.body;
-    const resultados: number[] = [];
-    const capital = valor_total / parcelas;
+    const capitalBase = valor_total / parcelas;
+    const resultados: { parcela: number; total: number; juros: number }[] = [];
 
     for (let i = 1; i <= parcelas; i++) {
-        let parcela = tipo_juros === 'simples'
-            ? calcularJurosSimples(capital, taxa_juros, i) / parcelas
-            : calcularJurosComposto(capital, taxa_juros, i) / parcelas;
-        resultados.push(Number(parcela.toFixed(2)));
+        let totalParcela: number;
+        if (tipo_juros === 'simples') {
+            totalParcela = calcularJurosSimples(capitalBase, taxa_juros, i);
+        } else {
+            totalParcela = calcularJurosComposto(capitalBase, taxa_juros, i);
+        }
+
+        const juros = totalParcela - capitalBase;
+        resultados.push({
+            parcela: i,
+            total: Number(totalParcela.toFixed(2)),
+            juros: Number(juros.toFixed(2)),
+        });
     }
 
     res.json({ parcelas: resultados });

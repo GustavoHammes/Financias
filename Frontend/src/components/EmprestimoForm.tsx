@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 
+interface Parcela {
+  parcela: number;
+  total: number;
+  juros: number;
+}
+
 const EmprestimoForm = () => {
   const [valor, setValor] = useState(0);
   const [parcelas, setParcelas] = useState(0);
   const [taxa, setTaxa] = useState(0);
   const [tipo, setTipo] = useState<'simples' | 'composto'>('simples');
-  const [resultado, setResultado] = useState<number[]>([]);
+  const [resultado, setResultado] = useState<Parcela[]>([]);
 
   const simular = async () => {
     const res = await fetch('http://localhost:3000/api/simular-emprestimo', {
@@ -22,21 +28,47 @@ const EmprestimoForm = () => {
     setResultado(data.parcelas);
   };
 
+  const totalGasto = resultado.reduce((acc, p) => acc + p.total, 0);
+  const totalJuros = resultado.reduce((acc, p) => acc + p.juros, 0);
+
   return (
     <div>
       <h2>Simular Empréstimo</h2>
       <input type="number" placeholder="Valor total" onChange={e => setValor(+e.target.value)} />
       <input type="number" placeholder="Parcelas" onChange={e => setParcelas(+e.target.value)} />
       <input type="number" placeholder="Taxa (%)" onChange={e => setTaxa(+e.target.value)} />
-      <select onChange={e => setTipo(e.target.value as any)}>
+      <select onChange={e => setTipo(e.target.value as 'simples' | 'composto')}>
         <option value="simples">Juros Simples</option>
         <option value="composto">Juros Compostos</option>
       </select>
       <button onClick={simular}>Simular</button>
+
       {resultado.length > 0 && (
-        <ul>
-          {resultado.map((p, i) => <li key={i}>Parcela {i + 1}: R$ {p.toFixed(2)}</li>)}
-        </ul>
+        <>
+          <table style={{ marginTop: '1rem', width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={{ border: '1px solid black', padding: '8px' }}>Parcela</th>
+                <th style={{ border: '1px solid black', padding: '8px' }}>Valor Total (R$)</th>
+                <th style={{ border: '1px solid black', padding: '8px' }}>Juros (R$)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {resultado.map((p) => (
+                <tr key={p.parcela}>
+                  <td style={{ border: '1px solid black', padding: '8px' }}>{p.parcela}</td>
+                  <td style={{ border: '1px solid black', padding: '8px' }}>{p.total.toFixed(2)}</td>
+                  <td style={{ border: '1px solid black', padding: '8px' }}>{p.juros.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div style={{ marginTop: '1rem', fontWeight: 'bold' }}>
+            <p>Total Gasto: R$ {totalGasto.toFixed(2)}</p>
+            <p>Total de Juros Pagos: R$ {totalJuros.toFixed(2)}</p>
+          </div>
+        </>
       )}
     </div>
   );
