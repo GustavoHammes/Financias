@@ -1,6 +1,6 @@
 import { Client } from "pg";
 import * as dotenv from "dotenv";
-import pool from "./db"; // usa pool para a conexão com bd_financias
+import pool from "./db"; // usa pool para a conexão com bd_financas
 
 dotenv.config({ path: __dirname + "/../.env" });
 
@@ -17,11 +17,11 @@ async function createDatabase(): Promise<void> {
     await client.connect();
 
     try {
-        await client.query(`CREATE DATABASE bd_financias`);
-        console.log("Banco de dados 'bd_financias' criado.");
+        await client.query(`CREATE DATABASE bd_financas`);
+        console.log("Banco de dados 'bd_financas' criado.");
     } catch (err: any) {
         if (err.code === "42P04") {
-            console.log("Banco de dados 'bd_financias' já existe.");
+            console.log("Banco de dados 'bd_financas' já existe.");
         } else {
             throw err;
         }
