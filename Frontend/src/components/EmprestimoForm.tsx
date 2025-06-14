@@ -20,7 +20,6 @@ const EmprestimoForm = () => {
       return;
     }
 
-    // Salva o usuário sempre que clicar em simular
     localStorage.setItem('usuario', nomeUsuario);
 
     const res = await fetch('http://localhost:3000/api/simular-emprestimo', {
@@ -44,44 +43,58 @@ const EmprestimoForm = () => {
 
   return (
     <div>
-      <h2>Simular Empréstimo</h2>
-      <input
-        type="text"
-        placeholder="Nome do usuário"
-        value={nomeUsuario}
-        onChange={e => setNomeUsuario(e.target.value)}
-      />
-      <input type="number" placeholder="Valor total" min={1} onChange={e => setValor(+e.target.value)} />
-      <input type="number" placeholder="Parcelas" min={1} onChange={e => setParcelas(+e.target.value)} />
-      <input type="number" placeholder="Taxa (%)" min={0} onChange={e => setTaxa(+e.target.value)} />
-      <select onChange={e => setTipo(e.target.value as 'simples' | 'composto')}>
-        <option value="simples">Juros Simples</option>
-        <option value="composto">Juros Compostos</option>
-      </select>
+      <div className="input-group">
+        <input
+          type="text"
+          placeholder="Nome do usuário"
+          value={nomeUsuario}
+          onChange={e => setNomeUsuario(e.target.value)}
+        />
+      </div>
+      
+      <div className="input-group">
+        <input type="number" placeholder="Valor total" min={1} onChange={e => setValor(+e.target.value)} />
+      </div>
+      
+      <div className="input-group">
+        <input type="number" placeholder="Parcelas" min={1} onChange={e => setParcelas(+e.target.value)} />
+      </div>
+      
+      <div className="input-group">
+        <input type="number" placeholder="Taxa (%)" min={0} onChange={e => setTaxa(+e.target.value)} />
+      </div>
+      
+      <div className="input-group">
+        <select onChange={e => setTipo(e.target.value as 'simples' | 'composto')}>
+          <option value="simples">Juros Simples</option>
+          <option value="composto">Juros Compostos</option>
+        </select>
+      </div>
+      
       <button onClick={simular}>Simular</button>
 
       {resultado.length > 0 && (
         <>
-          <table style={{ marginTop: '1rem', width: '100%', borderCollapse: 'collapse' }}>
+          <table>
             <thead>
               <tr>
-                <th style={{ border: '1px solid black', padding: '8px' }}>Parcela</th>
-                <th style={{ border: '1px solid black', padding: '8px' }}>Valor Total (R$)</th>
-                <th style={{ border: '1px solid black', padding: '8px' }}>Juros (R$)</th>
+                <th>Parcela</th>
+                <th>Valor Total (R$)</th>
+                <th>Juros (R$)</th>
               </tr>
             </thead>
             <tbody>
               {resultado.map(p => (
                 <tr key={p.parcela}>
-                  <td style={{ border: '1px solid black', padding: '8px' }}>{p.parcela}</td>
-                  <td style={{ border: '1px solid black', padding: '8px' }}>{p.total.toFixed(2)}</td>
-                  <td style={{ border: '1px solid black', padding: '8px' }}>{p.juros.toFixed(2)}</td>
+                  <td>{p.parcela}</td>
+                  <td>{p.total.toFixed(2)}</td>
+                  <td>{p.juros.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
 
-          <div style={{ marginTop: '1rem', fontWeight: 'bold' }}>
+          <div className="results-summary">
             <p>Total Gasto: R$ {totalGasto.toFixed(2)}</p>
             <p>Total de Juros Pagos: R$ {totalJuros.toFixed(2)}</p>
           </div>

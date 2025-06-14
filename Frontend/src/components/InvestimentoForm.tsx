@@ -34,7 +34,6 @@ const InvestimentoForm = () => {
       return;
     }
 
-    // Salva o usuário sempre que clicar em simular
     localStorage.setItem('usuario', nomeUsuario);
 
     const res = await fetch('http://localhost:3000/api/simular-investimento', {
@@ -58,42 +57,53 @@ const InvestimentoForm = () => {
 
   return (
     <div>
-      <h2>Simular Investimento</h2>
-      <input
-        type="text"
-        placeholder="Insira seu nome"
-        value={nomeUsuario}
-        onChange={e => setNomeUsuario(e.target.value)}
-      />
-      <select onChange={e => setInvestimentoId(e.target.value)} defaultValue="">
-        <option value="" disabled>Tipo de investimento</option>
-        {investimentos.map(inv => (
-          <option key={inv.id} value={inv.id}>{inv.nome}</option>
-        ))}
-      </select>
-      <input type="number" placeholder="Valor Investido" min={1} onChange={e => setValor(+e.target.value)} />
-      <input type="number" placeholder="Meses" min={1} onChange={e => setMeses(+e.target.value)} />
+      <div className="input-group">
+        <input
+          type="text"
+          placeholder="Insira seu nome"
+          value={nomeUsuario}
+          onChange={e => setNomeUsuario(e.target.value)}
+        />
+      </div>
+
+      <div className="input-group">
+        <select onChange={e => setInvestimentoId(e.target.value)} defaultValue="">
+          <option value="" disabled>Tipo de investimento</option>
+          {investimentos.map(inv => (
+            <option key={inv.id} value={inv.id}>{inv.nome}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="input-group">
+        <input type="number" placeholder="Valor Investido" min={1} onChange={e => setValor(+e.target.value)} />
+      </div>
+
+      <div className="input-group">
+        <input type="number" placeholder="Meses" min={1} onChange={e => setMeses(+e.target.value)} />
+      </div>
+
       <button onClick={simular}>Simular</button>
 
       {resultados.length > 0 && (
-        <table style={{ marginTop: '1rem', width: '100%', borderCollapse: 'collapse' }}>
+        <table>
           <thead>
             <tr>
-              <th style={{ border: '1px solid black', padding: '8px' }}>Usuário</th>
-              <th style={{ border: '1px solid black', padding: '8px' }}>Investimento</th>
-              <th style={{ border: '1px solid black', padding: '8px' }}>Valor Investido (R$)</th>
-              <th style={{ border: '1px solid black', padding: '8px' }}>Meses</th>
-              <th style={{ border: '1px solid black', padding: '8px' }}>Rendimento Final (R$)</th>
+              <th>Usuário</th>
+              <th>Investimento</th>
+              <th>Valor Investido (R$)</th>
+              <th>Meses</th>
+              <th>Rendimento Final (R$)</th>
             </tr>
           </thead>
           <tbody>
             {resultados.map((res, idx) => (
               <tr key={idx}>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{res.nome_usuario}</td>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{res.investimento}</td>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{res.valor_investido.toFixed(2)}</td>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{res.meses}</td>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{res.rendimento_final.toFixed(2)}</td>
+                <td>{res.nome_usuario}</td>
+                <td>{res.investimento}</td>
+                <td>{res.valor_investido.toFixed(2)}</td>
+                <td>{res.meses}</td>
+                <td>{res.rendimento_final.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

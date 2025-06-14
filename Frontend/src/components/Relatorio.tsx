@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RelatorioInvestimento = () => {
+const Relatorio = () => {
   const baixarRelatorioInvestimento = async () => {
     const usuario = localStorage.getItem('usuario');
 
@@ -50,14 +50,11 @@ const RelatorioInvestimento = () => {
   };
 
   return (
-    <div>
-      <h2>Relatórios</h2>
+    <div className="report-buttons">
       <button onClick={baixarRelatorioInvestimento}>Baixar Relatório de Investimentos</button>
-      <button onClick={baixarRelatorioEmprestimo} style={{ marginLeft: '1rem' }}>
-        Baixar Relatório de Empréstimo
-      </button>
+      <button onClick={baixarRelatorioEmprestimo}>Baixar Relatório de Empréstimo</button>
     </div>
   );
 };
 
-export default RelatorioInvestimento;
+export default Relatorio;
