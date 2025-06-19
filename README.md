@@ -49,7 +49,21 @@ Para instalar o `node_modules`, utilize o código abaixo:
 npm i install
 ```
 Após isso, será necessário realizar a criação do banco de dados. Para isso, criamos o arquivo `init.ts` que cria o banco automaticamente.
+acesse o terminal e utilize o comando cd backend.
 Para realizar a criação do Banco de dados, lembre-se de alterar as informações do arquivo `.env` que se encontra na pasta `Backend`. Após realizar as alterações, será necessário rodar o comando abaixo:
 ```
+cd backend
 npm run config
+```
+
+Agora, será necessário utilizar o comando npm run back para inciar o backend:
+```
+npm run back
+```
+
+Em seguida, abrir outro terminal e navegar para o frontend, após a navegação, rodar npm run dev:
+
+```
+cd frontend
+npm run dev
 ```
