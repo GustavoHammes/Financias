@@ -43,7 +43,7 @@ Explicar a matemática, o funcionamento e o código.
 
 ## Funcionamento do Projeto
 
-Se você quer testar o projeto, você precisa instalar as dependências primeiro. Será necessário instalar o arquivo `node_modules`.
+Caso queira testar o projeto, é necessário instalar as dependências primeiro. Será necessário instalar o arquivo `node_modules`.
 Para instalar o `node_modules`, utilize o código abaixo:
 ```
 npm i install
